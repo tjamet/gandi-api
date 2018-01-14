@@ -1,0 +1,17 @@
+language: go
+os:
+  - linux
+go:
+  - 1.x
+  - 1.7
+  - 1.8
+  - 1.9
+  - master
+go_import_path: github.com/prasmussen/gandi-api
+install:
+  - go get -u github.com/alecthomas/gometalinter
+  - gometalinter --install
+  # client and live_dns must fulfull gometalinter, but exclude already existing API with URL
+  - "gometalinter --vendor --exclude 'client/client.go:.*:warning: (method|struct field) Url should be URL .*'  ./live_dns/... ./client/..."
+script:
+  - go list github.com/prasmussen/gandi-api/... | grep -v vendor | xargs go test -v -race -cover
